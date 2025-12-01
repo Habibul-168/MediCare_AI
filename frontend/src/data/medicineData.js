@@ -1,0 +1,22 @@
+export const medicines = [
+  { id: 1, name: 'Paracetamol', price: 25, dosage: '500mg', category: 'Pain Relief', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400' },
+  { id: 2, name: 'Ibuprofen', price: 45, dosage: '400mg', category: 'Pain Relief', image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=400' },
+  { id: 3, name: 'Amoxicillin', price: 120, dosage: '500mg', category: 'Antibiotic', image: 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400' },
+  { id: 4, name: 'Azithromycin', price: 180, dosage: '500mg', category: 'Antibiotic', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400' },
+  { id: 5, name: 'Cetirizine', price: 35, dosage: '10mg', category: 'Allergy', image: 'https://images.unsplash.com/photo-1628771065518-0d82f1938462?w=400' },
+  { id: 6, name: 'Omeprazole', price: 65, dosage: '20mg', category: 'Digestive', image: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?w=400' },
+  { id: 7, name: 'Metformin', price: 55, dosage: '500mg', category: 'Diabetes', image: 'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=400' },
+  { id: 8, name: 'Aspirin', price: 20, dosage: '75mg', category: 'Heart Health', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400' },
+  { id: 9, name: 'Atorvastatin', price: 95, dosage: '10mg', category: 'Cholesterol', image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=400' },
+  { id: 10, name: 'Losartan', price: 85, dosage: '50mg', category: 'Blood Pressure', image: 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400' },
+  { id: 11, name: 'Levothyroxine', price: 75, dosage: '50mcg', category: 'Thyroid', image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=400' },
+  { id: 12, name: 'Salbutamol', price: 110, dosage: '100mcg', category: 'Respiratory', image: 'https://images.unsplash.com/photo-1628771065518-0d82f1938462?w=400' },
+  { id: 13, name: 'Montelukast', price: 125, dosage: '10mg', category: 'Respiratory', image: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?w=400' },
+  { id: 14, name: 'Ranitidine', price: 40, dosage: '150mg', category: 'Digestive', image: 'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=400' },
+  { id: 15, name: 'Diclofenac', price: 50, dosage: '50mg', category: 'Pain Relief', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400' },
+  { id: 16, name: 'Ciprofloxacin', price: 140, dosage: '500mg', category: 'Antibiotic', image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=400' },
+  { id: 17, name: 'Doxycycline', price: 160, dosage: '100mg', category: 'Antibiotic', image: 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400' },
+  { id: 18, name: 'Prednisolone', price: 70, dosage: '5mg', category: 'Steroid', image: 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400' },
+  { id: 19, name: 'Insulin', price: 450, dosage: 'As prescribed', category: 'Diabetes', image: 'https://images.unsplash.com/photo-1628771065518-0d82f1938462?w=400' },
+  { id: 20, name: 'Cough Syrup', price: 80, dosage: '10ml', category: 'Respiratory', image: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?w=400' }
+]
