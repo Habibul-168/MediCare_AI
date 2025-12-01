@@ -392,7 +392,10 @@ const EmergencyService = () => {
                         <Phone className="h-4 w-4 mr-2" />
                         Call
                       </button>
-                      <button className="flex-1 border border-green-600 text-green-600 py-2 px-4 rounded-lg font-medium hover:bg-green-50 transition-colors flex items-center justify-center">
+                      <button 
+                        onClick={() => window.open(`https://www.google.com/maps/search/${encodeURIComponent(hospital.name)}`, '_blank')}
+                        className="flex-1 border border-green-600 text-green-600 py-2 px-4 rounded-lg font-medium hover:bg-green-50 transition-colors flex items-center justify-center"
+                      >
                         <Navigation className="h-4 w-4 mr-2" />
                         Directions
                       </button>
