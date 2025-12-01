@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Search, Brain, Pill, AlertTriangle, CheckCircle, Download, User } from 'lucide-react'
 import axios from 'axios'
+import { API_URL } from '../config'
 
 const SymptomChecker = () => {
   const [symptoms, setSymptoms] = useState('')
@@ -32,7 +33,7 @@ const SymptomChecker = () => {
     setError(null)
     
     try {
-      const response = await axios.post('http://localhost:5000/api/symptoms/analyze', {
+      const response = await axios.post(`${API_URL}/api/symptoms/analyze`, {
         symptoms,
         patientName,
         patientAge
@@ -66,7 +67,7 @@ const SymptomChecker = () => {
     
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/symptoms/prescription/${prescriptionId}/download`,
+        `${API_URL}/api/symptoms/prescription/${prescriptionId}/download`,
         { responseType: 'blob' }
       )
       
