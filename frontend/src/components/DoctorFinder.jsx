@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { MapPin, Star, Phone, Clock, User, Search } from 'lucide-react'
 import axios from 'axios'
+import { API_URL } from '../config'
 
 const DoctorFinder = () => {
   const [location, setLocation] = useState('')
@@ -26,7 +27,7 @@ const DoctorFinder = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/doctors')
+      const response = await axios.get(`${API_URL}/api/doctors`)
       setDoctors(response.data)
     } catch (error) {
       console.error('Error fetching doctors:', error)
@@ -35,7 +36,7 @@ const DoctorFinder = () => {
 
   const searchDoctors = async () => {
     try {
-      let url = 'http://localhost:5000/api/doctors?'
+      let url = `${API_URL}/api/doctors?`
       if (location) url += `location=${location}&`
       if (specialty) url += `specialty=${specialty}`
       
