@@ -24,7 +24,6 @@ app.use('/api/prescriptions', require('./routes/prescriptions'))
 app.use('/api/checkups', require('./routes/checkups'))
 app.use('/api/telemedicine', require('./routes/telemedicine'))
 app.use('/api/medicines', require('./routes/medicines'))
-app.use('/api/seed', require('./routes/seed'))
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/medical-ai')

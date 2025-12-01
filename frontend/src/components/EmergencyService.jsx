@@ -112,7 +112,7 @@ const EmergencyService = () => {
   }
 
   const confirmCall = () => {
-    window.open('tel:108')
+    window.location.href = 'tel:108'
     setShowCallConfirm(false)
   }
 
@@ -121,7 +121,7 @@ const EmergencyService = () => {
   }
 
   const confirmHospitalCall = () => {
-    window.open(`tel:${hospitalToCall.phone}`)
+    window.location.href = `tel:${hospitalToCall.phone}`
     setHospitalToCall(null)
   }
 
