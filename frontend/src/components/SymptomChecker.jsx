@@ -12,6 +12,19 @@ const SymptomChecker = () => {
   const [prescriptionId, setPrescriptionId] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [seeding, setSeeding] = useState(false)
+
+  const seedSymptoms = async () => {
+    setSeeding(true)
+    try {
+      await axios.post(`${API_URL}/api/seed/symptoms`)
+      alert('Symptoms database seeded successfully!')
+    } catch (error) {
+      console.error('Error seeding symptoms:', error)
+      alert('Error seeding symptoms')
+    }
+    setSeeding(false)
+  }
 
   const commonSymptoms = [
     'Headache', 'Fever', 'Cough', 'Sore throat', 'Fatigue', 'Nausea',
@@ -99,6 +112,13 @@ const SymptomChecker = () => {
           <p className="text-xl text-gray-600">
             Describe your symptoms and get AI-powered medical insights
           </p>
+          <button
+            onClick={seedSymptoms}
+            disabled={seeding}
+            className="mt-4 text-xs bg-gray-200 text-gray-600 px-3 py-1 rounded hover:bg-gray-300 disabled:bg-gray-100"
+          >
+            {seeding ? 'Seeding...' : 'Seed Symptoms DB (Admin)'}
+          </button>
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-8">

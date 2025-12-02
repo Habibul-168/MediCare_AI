@@ -97,4 +97,31 @@ router.post('/doctors', async (req, res) => {
   }
 })
 
+router.post('/symptoms', async (req, res) => {
+  try {
+    const count = await Symptom.countDocuments()
+    if (count > 0) {
+      return res.json({ message: 'Symptoms already seeded', count })
+    }
+
+    const symptoms = [
+      { name: 'Headache', category: 'neurological', severity: 'mild', commonCauses: [{ condition: 'Tension Headache', probability: 60 }, { condition: 'Migraine', probability: 25 }], associatedSymptoms: ['nausea', 'light sensitivity'], redFlags: ['sudden severe headache', 'fever with headache'], description: 'Pain in the head or neck area' },
+      { name: 'Fever', category: 'general', severity: 'moderate', commonCauses: [{ condition: 'Viral Infection', probability: 70 }, { condition: 'Bacterial Infection', probability: 20 }], associatedSymptoms: ['chills', 'fatigue'], redFlags: ['high fever over 103°F', 'difficulty breathing'], description: 'Elevated body temperature' },
+      { name: 'Cough', category: 'respiratory', severity: 'mild', commonCauses: [{ condition: 'Common Cold', probability: 50 }, { condition: 'Bronchitis', probability: 30 }], associatedSymptoms: ['sore throat', 'congestion'], redFlags: ['coughing blood', 'chest pain'], description: 'Forceful expulsion of air from lungs' },
+      { name: 'Chest Pain', category: 'cardiovascular', severity: 'severe', commonCauses: [{ condition: 'Heart Attack', probability: 40 }, { condition: 'Angina', probability: 30 }], associatedSymptoms: ['shortness of breath', 'sweating'], redFlags: ['crushing chest pain', 'pain radiating to arm'], description: 'Pain or discomfort in chest area' },
+      { name: 'Nausea', category: 'digestive', severity: 'mild', commonCauses: [{ condition: 'Food Poisoning', probability: 40 }, { condition: 'Gastritis', probability: 30 }], associatedSymptoms: ['vomiting', 'dizziness'], redFlags: ['severe dehydration', 'blood in vomit'], description: 'Feeling of wanting to vomit' },
+      { name: 'Back Pain', category: 'musculoskeletal', severity: 'moderate', commonCauses: [{ condition: 'Muscle Strain', probability: 60 }, { condition: 'Herniated Disc', probability: 20 }], associatedSymptoms: ['stiffness', 'limited mobility'], redFlags: ['loss of bladder control', 'numbness in legs'], description: 'Pain in the back region' },
+      { name: 'Rash', category: 'dermatological', severity: 'mild', commonCauses: [{ condition: 'Allergic Reaction', probability: 50 }, { condition: 'Eczema', probability: 30 }], associatedSymptoms: ['itching', 'redness'], redFlags: ['difficulty breathing', 'swelling of face'], description: 'Skin irritation or eruption' },
+      { name: 'Fatigue', category: 'general', severity: 'mild', commonCauses: [{ condition: 'Anemia', probability: 40 }, { condition: 'Sleep Deprivation', probability: 50 }], associatedSymptoms: ['weakness', 'dizziness'], redFlags: ['unexplained weight loss', 'persistent fatigue'], description: 'Extreme tiredness or exhaustion' },
+      { name: 'Shortness of Breath', category: 'respiratory', severity: 'severe', commonCauses: [{ condition: 'Asthma', probability: 40 }, { condition: 'Pneumonia', probability: 30 }], associatedSymptoms: ['wheezing', 'chest tightness'], redFlags: ['blue lips', 'severe difficulty breathing'], description: 'Difficulty breathing or catching breath' },
+      { name: 'Dizziness', category: 'neurological', severity: 'moderate', commonCauses: [{ condition: 'Vertigo', probability: 40 }, { condition: 'Low Blood Pressure', probability: 30 }], associatedSymptoms: ['nausea', 'balance problems'], redFlags: ['loss of consciousness', 'severe headache'], description: 'Feeling lightheaded or unsteady' }
+    ]
+
+    await Symptom.insertMany(symptoms)
+    res.json({ message: 'Symptoms seeded successfully', count: symptoms.length })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
 module.exports = router
