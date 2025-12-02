@@ -13,6 +13,7 @@ const DoctorFinder = () => {
   const [bookingSuccess, setBookingSuccess] = useState(false)
   const [showCallConfirm, setShowCallConfirm] = useState(false)
   const [callDoctor, setCallDoctor] = useState(null)
+  const [seeding, setSeeding] = useState(false)
 
   const specialties = [
     'General Physician', 'Cardiologist', 'Dermatologist', 'Neurologist',
@@ -32,6 +33,19 @@ const DoctorFinder = () => {
     } catch (error) {
       console.error('Error fetching doctors:', error)
     }
+  }
+
+  const seedDoctors = async () => {
+    setSeeding(true)
+    try {
+      await axios.post(`${API_URL}/api/seed/doctors`)
+      await fetchDoctors()
+      alert('Doctors seeded successfully!')
+    } catch (error) {
+      console.error('Error seeding doctors:', error)
+      alert('Error seeding doctors')
+    }
+    setSeeding(false)
   }
 
   const searchDoctors = async () => {
@@ -98,6 +112,18 @@ const DoctorFinder = () => {
           animate={{ opacity: 1, y: 0 }}
           className="card mb-8"
         >
+          {doctors.length === 0 && (
+            <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-yellow-800 text-sm mb-2">No doctors found in database. Click below to seed sample doctors.</p>
+              <button
+                onClick={seedDoctors}
+                disabled={seeding}
+                className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 disabled:bg-gray-400 text-sm"
+              >
+                {seeding ? 'Seeding...' : 'Seed Sample Doctors'}
+              </button>
+            </div>
+          )}
           <div className="grid md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">

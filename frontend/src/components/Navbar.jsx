@@ -1,20 +1,69 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Stethoscope, Menu, X, Phone, MapPin, Activity, User, Mail, ShoppingCart } from 'lucide-react'
-import { useAuth } from '../context/AuthContext'
+import { Stethoscope, Menu, X, Phone, MapPin, Activity, User, Mail, Lock, Check, ShoppingCart } from 'lucide-react'
 
 const Navbar = () => {
-  const { user, logout, isAuthenticated } = useAuth()
-  const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [isSignUp, setIsSignUp] = useState(false)
+  const [formData, setFormData] = useState({ firstName: '', lastName: '', gender: '', email: '', phone: '', password: '', confirmPassword: '' })
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [userName, setUserName] = useState('')
+  const [userEmail, setUserEmail] = useState('')
+  const [userPhone, setUserPhone] = useState('')
+  const [userGender, setUserGender] = useState('')
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const [showProfileModal, setShowProfileModal] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
+
+  const passwordValidation = {
+    length: password.length >= 6,
+    upper: /[A-Z]/.test(password),
+    lower: /[a-z]/.test(password),
+    number: /[0-9]/.test(password),
+    special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (!formData.email || !formData.password || (isSignUp && (!formData.firstName || !formData.lastName || !formData.gender || !formData.phone))) {
+      alert('Please fill all required fields')
+      return
+    }
+    if (isSignUp && !Object.values(passwordValidation).every(v => v)) {
+      alert('Password does not meet requirements')
+      return
+    }
+    if (isSignUp && password !== confirmPassword) {
+      alert('Passwords do not match')
+      return
+    }
+    setIsLoggedIn(true)
+    setUserName(formData.firstName ? `${formData.firstName} ${formData.lastName}` : formData.email.split('@')[0])
+    setUserEmail(formData.email)
+    setUserPhone(formData.phone || '')
+    setUserGender(formData.gender || '')
+    setShowAuthModal(false)
+    setSuccessMessage(isSignUp ? 'Account created successfully!' : 'Signed in successfully!')
+    setShowSuccess(true)
+    setTimeout(() => setShowSuccess(false), 3000)
+  }
 
   const handleLogout = () => {
-    logout()
+    setIsLoggedIn(false)
+    setUserName('')
+    setUserEmail('')
+    setUserPhone('')
+    setUserGender('')
     setShowProfileMenu(false)
     setShowProfileModal(false)
+    setFormData({ firstName: '', lastName: '', gender: '', email: '', phone: '', password: '', confirmPassword: '' })
+    setPassword('')
+    setConfirmPassword('')
   }
 
   const [cartCount, setCartCount] = useState(0)
@@ -55,6 +104,7 @@ const Navbar = () => {
             </Link>
           </div>
 
+          {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
               <Link
@@ -74,16 +124,16 @@ const Navbar = () => {
                 </span>
               )}
             </button>
-            {isAuthenticated ? (
+            {isLoggedIn ? (
               <div className="relative">
-                <button 
-                  onClick={() => setShowProfileMenu(!showProfileMenu)}
-                  className="text-gray-700 hover:text-blue-600 transition-colors"
-                >
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white font-medium">
-                    {user?.name?.charAt(0).toUpperCase()}
-                  </div>
-                </button>
+                    <button 
+                      onClick={() => setShowProfileMenu(!showProfileMenu)}
+                      className="text-gray-700 hover:text-blue-600 transition-colors"
+                    >
+                      <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white font-medium">
+                        {userName.charAt(0).toUpperCase()}
+                      </div>
+                    </button>
                 {showProfileMenu && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 border border-gray-200">
                     <button 
@@ -95,10 +145,10 @@ const Navbar = () => {
                     >
                       Profile
                     </button>
-                    <Link to="/order-status" className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                    <Link to="/order-status" className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
                       Your Orders
                     </Link>
-                    <Link to="/settings" className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                    <Link to="/settings" className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
                       Settings
                     </Link>
                     <button
@@ -112,7 +162,10 @@ const Navbar = () => {
               </div>
             ) : (
               <button 
-                onClick={() => navigate('/login')}
+                onClick={() => {
+                  setShowAuthModal(true)
+                  setIsSignUp(false)
+                }}
                 className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 flex items-center"
               >
                 <User className="h-4 w-4 mr-2" />
@@ -121,6 +174,7 @@ const Navbar = () => {
             )}
           </div>
 
+          {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -131,6 +185,7 @@ const Navbar = () => {
           </div>
         </div>
 
+        {/* Mobile Menu */}
         {isOpen && (
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
@@ -149,21 +204,12 @@ const Navbar = () => {
                   <span>{item.name}</span>
                 </Link>
               ))}
-              <button onClick={() => { window.dispatchEvent(new Event('openCart')); setIsOpen(false); }} className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md relative">
-                <ShoppingCart className="h-5 w-5" />
-                <span>Cart</span>
-                {cartCount > 0 && (
-                  <span className="absolute top-1 left-8 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
               <div className="pt-2">
-                {isAuthenticated ? (
-                  <div className="space-y-2">
+                {isLoggedIn ? (
+                    <div className="space-y-2">
                     <div className="flex items-center justify-center px-3 py-2">
                       <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white font-medium text-lg">
-                        {user?.name?.charAt(0).toUpperCase()}
+                        {userName.charAt(0).toUpperCase()}
                       </div>
                     </div>
                     <button 
@@ -175,10 +221,10 @@ const Navbar = () => {
                     >
                       Profile
                     </button>
-                    <Link to="/order-status" onClick={() => setIsOpen(false)} className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
+                    <Link to="/order-status" onClick={() => setIsOpen(false)} className="w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
                       Your Orders
                     </Link>
-                    <Link to="/settings" onClick={() => setIsOpen(false)} className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
+                    <Link to="/settings" onClick={() => setIsOpen(false)} className="w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
                       Settings
                     </Link>
                     <button
@@ -191,7 +237,8 @@ const Navbar = () => {
                 ) : (
                   <button 
                     onClick={() => {
-                      navigate('/login')
+                      setShowAuthModal(true)
+                      setIsSignUp(false)
                       setIsOpen(false)
                     }}
                     className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-3 py-2 rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 flex items-center justify-center"
@@ -206,6 +253,229 @@ const Navbar = () => {
         )}
       </div>
 
+      {/* Success Message */}
+      {showSuccess && (
+        <div className="fixed top-20 right-4 z-50">
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 100 }}
+            className="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2"
+          >
+            <Check className="h-5 w-5" />
+            <span className="font-medium">{successMessage}</span>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Auth Modal */}
+      {showAuthModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              {isSignUp ? 'Create Account' : 'Sign In'}
+            </h2>
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {isSignUp && (
+                <>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        First Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.firstName}
+                        onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                        placeholder="First name"
+                        className="input-field"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Last Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.lastName}
+                        onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                        placeholder="Last name"
+                        className="input-field"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Gender *
+                    </label>
+                    <div className="flex space-x-4">
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          required
+                          name="gender"
+                          value="Male"
+                          checked={formData.gender === 'Male'}
+                          onChange={(e) => setFormData({...formData, gender: e.target.value})}
+                          className="w-4 h-4 text-blue-600"
+                        />
+                        <span className="text-gray-700">Male</span>
+                      </label>
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          required
+                          name="gender"
+                          value="Female"
+                          checked={formData.gender === 'Female'}
+                          onChange={(e) => setFormData({...formData, gender: e.target.value})}
+                          className="w-4 h-4 text-blue-600"
+                        />
+                        <span className="text-gray-700">Female</span>
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone Number *
+                    </label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                      <input
+                        type="tel"
+                        required
+                        value={formData.phone}
+                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        placeholder="Enter your phone number"
+                        className="input-field pl-10"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email *
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                  <input
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    placeholder="Enter your email"
+                    className="input-field pl-10"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Password *
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                  <input
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value)
+                      setFormData({...formData, password: e.target.value})
+                    }}
+                    placeholder="Enter your password"
+                    className="input-field pl-10"
+                  />
+                </div>
+                {isSignUp && password && (
+                  <div className="mt-2 space-y-1 text-xs">
+                    <div className={`flex items-center ${passwordValidation.length ? 'text-green-600' : 'text-gray-500'}`}>
+                      <Check className={`h-3 w-3 mr-1 ${passwordValidation.length ? 'opacity-100' : 'opacity-30'}`} />
+                      At least 6 characters
+                    </div>
+                    <div className={`flex items-center ${passwordValidation.upper ? 'text-green-600' : 'text-gray-500'}`}>
+                      <Check className={`h-3 w-3 mr-1 ${passwordValidation.upper ? 'opacity-100' : 'opacity-30'}`} />
+                      One uppercase letter
+                    </div>
+                    <div className={`flex items-center ${passwordValidation.lower ? 'text-green-600' : 'text-gray-500'}`}>
+                      <Check className={`h-3 w-3 mr-1 ${passwordValidation.lower ? 'opacity-100' : 'opacity-30'}`} />
+                      One lowercase letter
+                    </div>
+                    <div className={`flex items-center ${passwordValidation.number ? 'text-green-600' : 'text-gray-500'}`}>
+                      <Check className={`h-3 w-3 mr-1 ${passwordValidation.number ? 'opacity-100' : 'opacity-30'}`} />
+                      One number
+                    </div>
+                    <div className={`flex items-center ${passwordValidation.special ? 'text-green-600' : 'text-gray-500'}`}>
+                      <Check className={`h-3 w-3 mr-1 ${passwordValidation.special ? 'opacity-100' : 'opacity-30'}`} />
+                      One special character
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {isSignUp && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Confirm Password *
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                    <input
+                      type="password"
+                      required
+                      value={confirmPassword}
+                      onChange={(e) => {
+                        setConfirmPassword(e.target.value)
+                        setFormData({...formData, confirmPassword: e.target.value})
+                      }}
+                      placeholder="Confirm your password"
+                      className="input-field pl-10"
+                    />
+                  </div>
+                  {confirmPassword && (
+                    <div className={`mt-1 text-xs flex items-center ${password === confirmPassword ? 'text-green-600' : 'text-red-600'}`}>
+                      <Check className={`h-3 w-3 mr-1 ${password === confirmPassword ? 'opacity-100' : 'opacity-30'}`} />
+                      {password === confirmPassword ? 'Passwords match' : 'Passwords do not match'}
+                    </div>
+                  )}
+                </div>
+              )}
+              
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 transition-all"
+              >
+                {isSignUp ? 'Sign Up' : 'Sign In'}
+              </button>
+            </form>
+            
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => setIsSignUp(!isSignUp)}
+                className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+              >
+                {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
+              </button>
+            </div>
+            
+            <button
+              onClick={() => setShowAuthModal(false)}
+              className="mt-4 w-full text-gray-600 hover:text-gray-800 text-sm font-medium"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Profile Modal */}
       {showProfileModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
@@ -221,7 +491,7 @@ const Navbar = () => {
             
             <div className="flex flex-col items-center mb-6">
               <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-3xl mb-4">
-                {user?.name?.charAt(0).toUpperCase()}
+                {userName.charAt(0).toUpperCase()}
               </div>
             </div>
             
@@ -230,7 +500,15 @@ const Navbar = () => {
                 <label className="block text-sm font-medium text-gray-500 mb-1">Name</label>
                 <div className="flex items-center space-x-2 text-gray-900">
                   <User className="h-4 w-4 text-gray-400" />
-                  <span>{user?.name}</span>
+                  <span>{userName}</span>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-500 mb-1">Gender</label>
+                <div className="flex items-center space-x-2 text-gray-900">
+                  <User className="h-4 w-4 text-gray-400" />
+                  <span>{userGender || 'Not provided'}</span>
                 </div>
               </div>
               
@@ -238,7 +516,15 @@ const Navbar = () => {
                 <label className="block text-sm font-medium text-gray-500 mb-1">Email</label>
                 <div className="flex items-center space-x-2 text-gray-900">
                   <Mail className="h-4 w-4 text-gray-400" />
-                  <span>{user?.email}</span>
+                  <span>{userEmail}</span>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-500 mb-1">Phone Number</label>
+                <div className="flex items-center space-x-2 text-gray-900">
+                  <Phone className="h-4 w-4 text-gray-400" />
+                  <span>{userPhone || 'Not provided'}</span>
                 </div>
               </div>
             </div>

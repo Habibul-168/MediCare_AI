@@ -3,11 +3,8 @@ import { motion } from 'framer-motion'
 import { Pill, ShoppingCart, Search, X, MapPin, CreditCard, Smartphone, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { medicines } from '../data/medicineData'
-import { useAuth } from '../context/AuthContext'
 
 const MedicineStore = () => {
-  const { isAuthenticated } = useAuth()
-  const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [cart, setCart] = useState([])
@@ -85,6 +82,8 @@ const MedicineStore = () => {
   const tax = +(subtotal * 0.05).toFixed(2)
   const deliveryFee = subtotal > 100 ? 0 : (subtotal === 0 ? 0 : 25)
   const totalAmount = +(subtotal + tax + deliveryFee).toFixed(2)
+
+  const navigate = useNavigate()
 
   const handleCheckout = (e) => {
     e.preventDefault()
@@ -174,7 +173,7 @@ const MedicineStore = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
           {filteredMedicines.map((medicine) => {
             const inCart = cart.find(item => item.id === medicine.id)
             return (
@@ -297,12 +296,8 @@ const MedicineStore = () => {
                     </div>
                     <button
                       onClick={() => {
-                        if (!isAuthenticated) {
-                          navigate('/login')
-                          return
-                        }
                         setShowCart(false)
-                        navigate('/checkout')
+                        setShowCheckout(true)
                       }}
                       className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
                     >
@@ -313,35 +308,6 @@ const MedicineStore = () => {
               )}
             </div>
           </div>
-        )}
-
-        {/* Buy Now Button - Fixed at bottom */}
-        {cart.length > 0 && (
-          <motion.div
-            initial={{ y: 100 }}
-            animate={{ y: 0 }}
-            className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 p-4 z-40"
-          >
-            <div className="max-w-7xl mx-auto flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">{cart.length} item(s) in cart</p>
-                <p className="text-xl font-bold text-green-600">₹{totalAmount.toFixed(2)}</p>
-              </div>
-              <button
-                onClick={() => {
-                  if (!isAuthenticated) {
-                    navigate('/login')
-                    return
-                  }
-                  navigate('/checkout')
-                }}
-                className="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center"
-              >
-                <ShoppingCart className="h-5 w-5 mr-2" />
-                Buy Now
-              </button>
-            </div>
-          </motion.div>
         )}
 
         {/* Checkout Modal */}

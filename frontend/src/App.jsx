@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { AuthProvider } from './context/AuthContext'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Footer from './components/Footer'
@@ -21,51 +20,38 @@ import MedicineStore from './components/MedicineStore'
 import OrderStatus from './pages/OrderStatus'
 import Settings from './pages/Settings'
 import ScrollToTop from './components/ScrollToTop'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import ProtectedRoute from './components/ProtectedRoute'
-import Appointments from './pages/Appointments'
-import HealthCheckupBookings from './pages/HealthCheckupBookings'
-import Checkout from './pages/Checkout'
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <ScrollToTop />
-        <div className="min-h-screen flex flex-col">
-          <Navbar />
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Hero />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/appointments" element={<Appointments />} />
-              <Route path="/health-checkup-bookings" element={<HealthCheckupBookings />} />
-              <Route path="/symptoms" element={<SymptomChecker />} />
-              <Route path="/doctors" element={<DoctorFinder />} />
-              <Route path="/emergency" element={<EmergencyService />} />
-              <Route path="/health-checkup" element={<HealthCheckup />} />
-              <Route path="/medicines" element={<MedicineStore />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/telemedicine" element={<Telemedicine />} />
-              <Route path="/health-records" element={<ProtectedRoute><HealthRecords /></ProtectedRoute>} />
-              <Route path="/order-status" element={<OrderStatus />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/help" element={<HelpCenter />} />
-              <Route path="/contact" element={<ContactUs />} />
-              <Route path="/privacy" element={<PrivacyPolicy />} />
-              <Route path="/terms" element={<TermsOfService />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/about" element={<AboutUs />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/blog" element={<Blog />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </Router>
-    </AuthProvider>
+    <Router>
+      <ScrollToTop />
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Hero />} />
+            <Route path="/symptoms" element={<SymptomChecker />} />
+            <Route path="/doctors" element={<DoctorFinder />} />
+            <Route path="/emergency" element={<EmergencyService />} />
+            <Route path="/health-checkup" element={<HealthCheckup />} />
+            <Route path="/medicines" element={<MedicineStore />} />
+            <Route path="/order-status" element={<OrderStatus />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/health-records" element={<HealthRecords />} />
+            <Route path="/telemedicine" element={<Telemedicine />} />
+            <Route path="/help" element={<HelpCenter />} />
+            <Route path="/contact" element={<ContactUs />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/careers" element={<Careers />} />
+            <Route path="/blog" element={<Blog />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
   )
 }
 
