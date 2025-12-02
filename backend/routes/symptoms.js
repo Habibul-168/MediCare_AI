@@ -166,4 +166,20 @@ router.get('/', async (req, res) => {
   }
 })
 
+// Search symptoms
+router.get('/search', async (req, res) => {
+  try {
+    const { q } = req.query
+    if (!q || q.length < 2) {
+      return res.json([])
+    }
+    const symptoms = await Symptom.find({
+      name: { $regex: q, $options: 'i' }
+    }).limit(10)
+    res.json(symptoms)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
 module.exports = router

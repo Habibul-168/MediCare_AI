@@ -13,6 +13,8 @@ const SymptomChecker = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [seeding, setSeeding] = useState(false)
+  const [symptomSuggestions, setSymptomSuggestions] = useState([])
+  const [showSuggestions, setShowSuggestions] = useState(false)
 
   const seedSymptoms = async () => {
     setSeeding(true)
@@ -28,12 +30,27 @@ const SymptomChecker = () => {
 
   const commonSymptoms = [
     'Headache', 'Fever', 'Cough', 'Sore throat', 'Fatigue', 'Nausea',
-    'Chest pain', 'Shortness of breath', 'Dizziness', 'Stomach pain',
-    'Back pain', 'Joint pain', 'Skin rash', 'Insomnia', 'Anxiety'
+    'Chest pain', 'Shortness of breath', 'Dizziness', 'Stomach pain'
   ]
 
   const handleSymptomClick = (symptom) => {
     setSymptoms(prev => prev ? `${prev}, ${symptom}` : symptom)
+    setShowSuggestions(false)
+  }
+
+  const searchSymptoms = async (searchTerm) => {
+    if (searchTerm.length < 2) {
+      setSymptomSuggestions([])
+      setShowSuggestions(false)
+      return
+    }
+    try {
+      const response = await axios.get(`${API_URL}/api/symptoms/search?q=${searchTerm}`)
+      setSymptomSuggestions(response.data)
+      setShowSuggestions(response.data.length > 0)
+    } catch (error) {
+      console.error('Error searching symptoms:', error)
+    }
   }
 
   const analyzeSymptoms = async () => {
@@ -152,13 +169,35 @@ const SymptomChecker = () => {
               />
             </div>
             
-            <textarea
-              value={symptoms}
-              onChange={(e) => setSymptoms(e.target.value)}
-              placeholder="Describe your symptoms (e.g., fever, cough, headache) *"
-              className="input-field h-32 mb-4 resize-none"
-              required
-            />
+            <div className="relative mb-4">
+              <textarea
+                value={symptoms}
+                onChange={(e) => {
+                  setSymptoms(e.target.value)
+                  const words = e.target.value.split(/[,\s]+/)
+                  const lastWord = words[words.length - 1]
+                  searchSymptoms(lastWord)
+                }}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                placeholder="Describe your symptoms (e.g., fever, cough, headache) *"
+                className="input-field h-32 resize-none"
+                required
+              />
+              {showSuggestions && symptomSuggestions.length > 0 && (
+                <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                  {symptomSuggestions.map((symptom) => (
+                    <div
+                      key={symptom._id}
+                      onClick={() => handleSymptomClick(symptom.name)}
+                      className="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b last:border-b-0"
+                    >
+                      <p className="font-semibold text-gray-900">{symptom.name}</p>
+                      <p className="text-xs text-gray-600">{symptom.description}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             
             {error && (
               <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
