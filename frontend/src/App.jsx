@@ -26,6 +26,7 @@ import Register from './pages/Register'
 import ProtectedRoute from './components/ProtectedRoute'
 import Appointments from './pages/Appointments'
 import HealthCheckupBookings from './pages/HealthCheckupBookings'
+import Checkout from './pages/Checkout'
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
               <Route path="/emergency" element={<EmergencyService />} />
               <Route path="/health-checkup" element={<HealthCheckup />} />
               <Route path="/medicines" element={<MedicineStore />} />
+              <Route path="/checkout" element={<Checkout />} />
               <Route path="/telemedicine" element={<Telemedicine />} />
               <Route path="/health-records" element={<ProtectedRoute><HealthRecords /></ProtectedRoute>} />
               <Route path="/order-status" element={<OrderStatus />} />

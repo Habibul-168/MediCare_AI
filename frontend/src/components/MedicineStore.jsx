@@ -302,7 +302,7 @@ const MedicineStore = () => {
                           return
                         }
                         setShowCart(false)
-                        setShowCheckout(true)
+                        navigate('/checkout')
                       }}
                       className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
                     >
@@ -313,6 +313,35 @@ const MedicineStore = () => {
               )}
             </div>
           </div>
+        )}
+
+        {/* Buy Now Button - Fixed at bottom */}
+        {cart.length > 0 && (
+          <motion.div
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
+            className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 p-4 z-40"
+          >
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">{cart.length} item(s) in cart</p>
+                <p className="text-xl font-bold text-green-600">₹{totalAmount.toFixed(2)}</p>
+              </div>
+              <button
+                onClick={() => {
+                  if (!isAuthenticated) {
+                    navigate('/login')
+                    return
+                  }
+                  navigate('/checkout')
+                }}
+                className="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center"
+              >
+                <ShoppingCart className="h-5 w-5 mr-2" />
+                Buy Now
+              </button>
+            </div>
+          </motion.div>
         )}
 
         {/* Checkout Modal */}

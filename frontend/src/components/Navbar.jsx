@@ -149,6 +149,15 @@ const Navbar = () => {
                   <span>{item.name}</span>
                 </Link>
               ))}
+              <button onClick={() => { window.dispatchEvent(new Event('openCart')); setIsOpen(false); }} className="flex items-center space-x-2 text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md relative">
+                <ShoppingCart className="h-5 w-5" />
+                <span>Cart</span>
+                {cartCount > 0 && (
+                  <span className="absolute top-1 left-8 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                    {cartCount}
+                  </span>
+                )}
+              </button>
               <div className="pt-2">
                 {isAuthenticated ? (
                   <div className="space-y-2">
