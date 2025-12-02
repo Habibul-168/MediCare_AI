@@ -174,7 +174,7 @@ const MedicineStore = () => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
           {filteredMedicines.map((medicine) => {
             const inCart = cart.find(item => item.id === medicine.id)
             return (
