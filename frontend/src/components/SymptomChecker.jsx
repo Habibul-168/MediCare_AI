@@ -34,12 +34,15 @@ const SymptomChecker = () => {
   ]
 
   const handleSymptomClick = (symptom) => {
-    setSymptoms(prev => prev ? `${prev}, ${symptom}` : symptom)
+    const words = symptoms.split(/[,\s]+/).filter(w => w.length > 0)
+    words.pop()
+    words.push(symptom)
+    setSymptoms(words.join(', ') + ', ')
     setShowSuggestions(false)
   }
 
   const searchSymptoms = async (searchTerm) => {
-    if (searchTerm.length < 2) {
+    if (searchTerm.length < 1) {
       setSymptomSuggestions([])
       setShowSuggestions(false)
       return
@@ -178,6 +181,12 @@ const SymptomChecker = () => {
                   const lastWord = words[words.length - 1]
                   searchSymptoms(lastWord)
                 }}
+                onKeyDown={(e) => {
+                  if ((e.key === 'Enter' || e.key === 'Tab') && showSuggestions && symptomSuggestions.length > 0) {
+                    e.preventDefault()
+                    handleSymptomClick(symptomSuggestions[0].name)
+                  }
+                }}
                 onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                 placeholder="Describe your symptoms (e.g., fever, cough, headache) *"
                 className="input-field h-32 resize-none"
@@ -188,7 +197,10 @@ const SymptomChecker = () => {
                   {symptomSuggestions.map((symptom) => (
                     <div
                       key={symptom._id}
-                      onClick={() => handleSymptomClick(symptom.name)}
+                      onMouseDown={(e) => {
+                        e.preventDefault()
+                        handleSymptomClick(symptom.name)
+                      }}
                       className="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b last:border-b-0"
                     >
                       <p className="font-semibold text-gray-900">{symptom.name}</p>
