@@ -63,6 +63,17 @@ router.post('/search', async (req, res) => {
   }
 })
 
+// Register new doctor
+router.post('/register', async (req, res) => {
+  try {
+    const doctor = new Doctor(req.body)
+    await doctor.save()
+    res.json({ message: 'Doctor registered successfully', doctor })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
 // Book appointment
 router.post('/:id/book', async (req, res) => {
   try {

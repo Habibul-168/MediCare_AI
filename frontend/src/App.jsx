@@ -20,6 +20,7 @@ import MedicineStore from './components/MedicineStore'
 import OrderStatus from './pages/OrderStatus'
 import Settings from './pages/Settings'
 import ScrollToTop from './components/ScrollToTop'
+import DoctorRegister from './pages/DoctorRegister'
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/" element={<Hero />} />
             <Route path="/symptoms" element={<SymptomChecker />} />
             <Route path="/doctors" element={<DoctorFinder />} />
+            <Route path="/doctor-register" element={<DoctorRegister />} />
             <Route path="/emergency" element={<EmergencyService />} />
             <Route path="/health-checkup" element={<HealthCheckup />} />
             <Route path="/medicines" element={<MedicineStore />} />
