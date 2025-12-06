@@ -166,10 +166,10 @@ const Navbar = () => {
                     >
                       Profile
                     </button>
-                    <Link to="/order-status" className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                    <Link to="/order-status" onClick={() => setShowProfileMenu(false)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
                       Your Orders
                     </Link>
-                    <Link to="/settings" className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                    <Link to="/settings" onClick={() => setShowProfileMenu(false)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
                       Settings
                     </Link>
                     <button
@@ -242,10 +242,10 @@ const Navbar = () => {
                     >
                       Profile
                     </button>
-                    <Link to="/order-status" onClick={() => setIsOpen(false)} className="w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
+                    <Link to="/order-status" onClick={() => setIsOpen(false)} className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
                       Your Orders
                     </Link>
-                    <Link to="/settings" onClick={() => setIsOpen(false)} className="w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
+                    <Link to="/settings" onClick={() => setIsOpen(false)} className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
                       Settings
                     </Link>
                     <button
