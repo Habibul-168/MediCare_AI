@@ -42,8 +42,16 @@ const Navbar = () => {
       alert('Passwords do not match')
       return
     }
+    const name = formData.firstName ? `${formData.firstName} ${formData.lastName}` : formData.email.split('@')[0]
+    const userData = {
+      name,
+      email: formData.email,
+      phone: formData.phone || '',
+      gender: formData.gender || ''
+    }
+    localStorage.setItem('user', JSON.stringify(userData))
     setIsLoggedIn(true)
-    setUserName(formData.firstName ? `${formData.firstName} ${formData.lastName}` : formData.email.split('@')[0])
+    setUserName(name)
     setUserEmail(formData.email)
     setUserPhone(formData.phone || '')
     setUserGender(formData.gender || '')
@@ -54,6 +62,7 @@ const Navbar = () => {
   }
 
   const handleLogout = () => {
+    localStorage.removeItem('user')
     setIsLoggedIn(false)
     setUserName('')
     setUserEmail('')
@@ -69,6 +78,16 @@ const Navbar = () => {
   const [cartCount, setCartCount] = useState(0)
 
   useEffect(() => {
+    const savedUser = localStorage.getItem('user')
+    if (savedUser) {
+      const user = JSON.parse(savedUser)
+      setIsLoggedIn(true)
+      setUserName(user.name)
+      setUserEmail(user.email)
+      setUserPhone(user.phone)
+      setUserGender(user.gender)
+    }
+
     const updateCartCount = () => {
       const cart = JSON.parse(localStorage.getItem('cart') || '[]')
       setCartCount(cart.length)
@@ -82,6 +101,7 @@ const Navbar = () => {
     { name: 'Home', path: '/', icon: Activity },
     { name: 'Symptom Checker', path: '/symptoms', icon: Stethoscope },
     { name: 'Find Doctors', path: '/doctors', icon: MapPin },
+    { name: 'Medicine Store', path: '/medicines', icon: ShoppingCart },
     { name: 'Emergency', path: '/emergency', icon: Phone },
   ]
 
@@ -116,10 +136,11 @@ const Navbar = () => {
                 <span>{item.name}</span>
               </Link>
             ))}
-            <button onClick={() => window.dispatchEvent(new Event('openCart'))} className="relative text-gray-700 hover:text-blue-600 transition-colors">
-              <ShoppingCart className="h-6 w-6" />
+            <button onClick={() => window.dispatchEvent(new Event('openCart'))} className="relative text-gray-700 hover:text-blue-600 transition-colors flex items-center space-x-1">
+              <ShoppingCart className="h-5 w-5" />
+              <span className="text-sm font-medium">Cart</span>
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                <span className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
                   {cartCount}
                 </span>
               )}

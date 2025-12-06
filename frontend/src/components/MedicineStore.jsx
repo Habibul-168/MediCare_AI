@@ -193,29 +193,54 @@ const MedicineStore = () => {
                 <p className="text-sm text-gray-600 mb-1">Dosage: {medicine.dosage}</p>
                 <p className="text-2xl font-bold text-green-600 mb-4">₹{medicine.price}</p>
                 {inCart ? (
-                  <div className="flex items-center justify-between bg-white border-2 border-blue-600 rounded-lg p-2">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between bg-white border-2 border-blue-600 rounded-lg p-2">
+                      <button
+                        onClick={() => updateQuantity(medicine.id, -1)}
+                        className="w-8 h-8 bg-blue-600 text-white rounded-full hover:bg-blue-700 font-bold"
+                      >
+                        -
+                      </button>
+                      <span className="font-bold text-blue-600">{inCart.quantity}</span>
+                      <button
+                        onClick={() => updateQuantity(medicine.id, 1)}
+                        className="w-8 h-8 bg-blue-600 text-white rounded-full hover:bg-blue-700 font-bold"
+                      >
+                        +
+                      </button>
+                    </div>
                     <button
-                      onClick={() => updateQuantity(medicine.id, -1)}
-                      className="w-8 h-8 bg-blue-600 text-white rounded-full hover:bg-blue-700 font-bold"
+                      onClick={() => {
+                        setShowCart(false)
+                        setShowCheckout(true)
+                      }}
+                      className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors font-semibold"
                     >
-                      -
-                    </button>
-                    <span className="font-bold text-blue-600">{inCart.quantity}</span>
-                    <button
-                      onClick={() => updateQuantity(medicine.id, 1)}
-                      className="w-8 h-8 bg-blue-600 text-white rounded-full hover:bg-blue-700 font-bold"
-                    >
-                      +
+                      Buy Now
                     </button>
                   </div>
                 ) : (
-                  <button
-                    onClick={() => addToCart(medicine)}
-                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
-                  >
-                    <ShoppingCart className="h-4 w-4 mr-2" />
-                    Add to Cart
-                  </button>
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => addToCart(medicine)}
+                      className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
+                    >
+                      <ShoppingCart className="h-4 w-4 mr-2" />
+                      Add to Cart
+                    </button>
+                    <button
+                      onClick={() => {
+                        addToCart(medicine)
+                        setTimeout(() => {
+                          setShowCart(false)
+                          setShowCheckout(true)
+                        }, 100)
+                      }}
+                      className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors font-semibold"
+                    >
+                      Buy Now
+                    </button>
+                  </div>
                 )}
               </motion.div>
             )
@@ -484,7 +509,7 @@ const MedicineStore = () => {
                           value={checkoutData.upiId}
                           onChange={(e) => setCheckoutData({...checkoutData, upiId: e.target.value})}
                           placeholder="example@upi"
-                          className="input-field"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                       </div>
                     )}
@@ -499,7 +524,7 @@ const MedicineStore = () => {
                             value={checkoutData.cardNumber}
                             onChange={(e) => setCheckoutData({...checkoutData, cardNumber: e.target.value})}
                             placeholder="1234 5678 9012 3456"
-                            className="input-field"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             maxLength={19}
                           />
                         </div>
@@ -512,7 +537,7 @@ const MedicineStore = () => {
                               value={checkoutData.cardExpiryMonth}
                               onChange={(e) => setCheckoutData({...checkoutData, cardExpiryMonth: e.target.value})}
                               placeholder="MM"
-                              className="input-field"
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                               maxLength={2}
                             />
                           </div>
@@ -524,7 +549,7 @@ const MedicineStore = () => {
                               value={checkoutData.cardExpiryYear}
                               onChange={(e) => setCheckoutData({...checkoutData, cardExpiryYear: e.target.value})}
                               placeholder="YY"
-                              className="input-field"
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                               maxLength={2}
                             />
                           </div>
@@ -536,7 +561,7 @@ const MedicineStore = () => {
                               value={checkoutData.cardCvv}
                               onChange={(e) => setCheckoutData({...checkoutData, cardCvv: e.target.value})}
                               placeholder="CVV"
-                              className="input-field"
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                               maxLength={4}
                             />
                           </div>
@@ -554,7 +579,7 @@ const MedicineStore = () => {
                             value={checkoutData.bankName}
                             onChange={(e) => setCheckoutData({...checkoutData, bankName: e.target.value})}
                             placeholder="Your bank name"
-                            className="input-field"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           />
                         </div>
                         <div>
@@ -565,7 +590,7 @@ const MedicineStore = () => {
                             value={checkoutData.accountNumber}
                             onChange={(e) => setCheckoutData({...checkoutData, accountNumber: e.target.value})}
                             placeholder="XXXXXXXXXXXX"
-                            className="input-field"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           />
                         </div>
                         <div>
@@ -576,7 +601,7 @@ const MedicineStore = () => {
                             value={checkoutData.ifsc}
                             onChange={(e) => setCheckoutData({...checkoutData, ifsc: e.target.value})}
                             placeholder="ABCD0123456"
-                            className="input-field"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           />
                         </div>
                       </div>
